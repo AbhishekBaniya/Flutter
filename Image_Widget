@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
           color: Theme.of(context).primaryColor,
           elevation: 6.0,
           child: Image.network(
-              "https://www.google.com/search?q=FLUTTER+image&rlz=1C5CHFA_enIN967IN967&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjTxcKTjJDzAhVJ8HMBHaMCDJ0Q_AUoAXoECAEQAw&biw=1440&bih=720&dpr=2#imgrc=TlsNUe-tV6T6AM"),
+              " Your URL"),
         ),
       ),
       floatingActionButton: FloatingActionButton(
