@@ -1,0 +1,107 @@
+responsive_builder: ^0.4.1 // shoud be implemented in pubspec.yaml below cuportino..
+
+
+import 'package:flutter/material.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    //final width = MediaQuery.of(context).size.width;
+    //final height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: OrientationLayoutBuilder(
+        portrait: (context) => const customContainerSliderPoitrate(),
+        landscape: (context) => const Hero(
+            tag: 'Hero-LandScapMode', child: customContainerSliderLandScape()),
+      ),
+    );
+  }
+}
+
+// ignore: camel_case_types
+class customContainerSliderLandScape extends StatelessWidget {
+  const customContainerSliderLandScape({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 320.0,
+            height: 180.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: const LinearGradient(
+                colors: [Colors.red, Colors.pink, Colors.orangeAccent],
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 10.0,
+          ),
+          const Expanded(
+            child: Text(
+              'Hey ther, \n\nCodeX is an ecosysytem practical resources for Developers who want to build high-qualit mobile apps.',
+              textDirection: TextDirection.ltr,
+              style: TextStyle(fontSize: 22.0),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ignore: camel_case_types
+class customContainerSliderPoitrate extends StatelessWidget {
+  const customContainerSliderPoitrate({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            width: 320.0,
+            height: 180.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: const LinearGradient(
+                colors: [Colors.red, Colors.pink],
+              ),
+            ),
+          ),
+          const Text(
+            'Hey ther, \n\nCodeX is an ecosysytem practical resources for Developers who want to build high-qualit mobile apps.',
+            textDirection: TextDirection.ltr,
+            style: TextStyle(fontSize: 22.0),
+          ),
+        ],
+      ),
+    );
+  }
+}
