@@ -1,0 +1,155 @@
+import 'package:flutter/material.dart';
+import 'screens/dashboard.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+
+// Dashboard Class
+import 'package:flutter/material.dart';
+import 'package:json_parsing_using_model_class/data_parser/Service.dart';
+import '/models/Post.dart';
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  late List<Post> _posts;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = true;
+    Service.getPost().then((posts) {
+      _posts = posts;
+      isLoading = false;
+    });
+  }
+
+  // void _incrementCounter() {
+  //   setState(() {
+  //     _counter++;
+  //   });
+  //widget.title
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(isLoading ? "Loading..." : "Parse Data To Model Class"),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.pinkAccent],
+          ),
+        ),
+        child: ListView.builder(
+            shrinkWrap: false,
+            scrollDirection: Axis.vertical,
+            itemCount: _posts.isEmpty ? 0 : _posts.length,
+            itemBuilder: (context, position) {
+              Post post = _posts[position];
+              return ListTile(
+                leading: const Icon(
+                  Icons.star_border_outlined,
+                  color: Colors.white,
+                ),
+                title: Text(post.title),
+                subtitle: Text(post.body),
+                trailing: null,
+              );
+            }),
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+ // model class
+ import 'dart:convert';
+
+List<Post> postFromJson(String str) =>
+    List<Post>.from(json.decode(str).map((x) => Post.fromJson(x)));
+
+String postToJson(List<Post> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Post {
+  Post({
+    required this.userId,
+    required this.id,
+    required this.title,
+    required this.body,
+  });
+
+  int userId;
+  int id;
+  String title;
+  String body;
+
+  factory Post.fromJson(Map<String, dynamic> json) => Post(
+        userId: json["userId"],
+        id: json["id"],
+        title: json["title"],
+        body: json["body"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "userId": userId,
+        "id": id,
+        "title": title,
+        "body": body,
+      };
+}
+ // JsonParsing Class
+ import 'package:http/http.dart' as http;
+import 'package:json_parsing_using_model_class/models/Post.dart';
+
+class Service {
+  static String data = 'https://jsonplaceholder.typicode.com/posts';
+  static Future<List<Post>> getPost() async {
+    try {
+      final response = await http.get(Uri.parse(data));
+      if (response.statusCode == 200) {
+        final List<Post> posts = postFromJson(response.body);
+        return posts;
+      } else {
+        return List.empty();
+      }
+    } catch (e) {
+      return List.empty();
+    }
+  }
+}
